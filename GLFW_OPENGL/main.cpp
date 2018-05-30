@@ -8,12 +8,12 @@
 #include <GLFW/glfw3.h>
 
 // Other includes
-#include "Shader.h"
+#include "shader.h"
 
 // Window dimensions
 const GLuint WIDTH = 800, HEIGHT = 600;
 
-// The MAIN function, from here we start the application and run the game loop
+// The MAIN function, from here we start the application and run the main loop
 int main( )
 {
     // Init GLFW
@@ -28,16 +28,14 @@ int main( )
     glfwWindowHint( GLFW_RESIZABLE, GL_FALSE );
     
     // Create a GLFWwindow object that we can use for GLFW's functions
-    GLFWwindow *window = glfwCreateWindow( WIDTH, HEIGHT, "LearnOpenGL", nullptr, nullptr );
+    GLFWwindow *window = glfwCreateWindow( WIDTH, HEIGHT, "hello word", nullptr, nullptr );
     
     int screenWidth, screenHeight;
     glfwGetFramebufferSize( window, &screenWidth, &screenHeight );
     
-    if ( nullptr == window )
-    {
+    if ( nullptr == window ){
         std::cout << "Failed to create GLFW window" << std::endl;
         glfwTerminate( );
-        
         return EXIT_FAILURE;
     }
     
@@ -56,18 +54,18 @@ int main( )
     glViewport( 0, 0, screenWidth, screenHeight );
     
     // Build and compile our shader program
-    Shader ourShader( "core.vs", "core.frag" );
+    Shader ourShader( "vertexShader.txt", "fragmentShader.txt" );
     
     
     // Set up vertex data (and buffer(s)) and attribute pointers
-    GLfloat vertices[] =
-    {
+    GLfloat vertices[] = {
         // Positions         // Colors
         0.5f, -0.5f, 0.0f,   1.0f, 0.0f, 0.0f,  // Bottom Right
         -0.5f, -0.5f, 0.0f,   0.0f, 1.0f, 0.0f,  // Bottom Left
         0.0f,  0.5f, 0.0f,   0.0f, 0.0f, 1.0f   // Top
     };
-    GLuint VBO, VAO;
+
+    GLuint VBO, VAO;// Vertex Buffer Object and Vertex Array Object
     glGenVertexArrays( 1, &VAO );
     glGenBuffers( 1, &VBO );
     // Bind the Vertex Array Object first, then bind and set vertex buffer(s) and attribute pointer(s).
@@ -85,7 +83,7 @@ int main( )
     
     glBindVertexArray( 0 ); // Unbind VAO
     
-    // Game loop
+    // Main loop
     while ( !glfwWindowShouldClose( window ) )
     {
         // Check if any events have been activiated (key pressed, mouse moved etc.) and call corresponding response functions
@@ -93,7 +91,7 @@ int main( )
         
         // Render
         // Clear the colorbuffer
-        glClearColor( 0.2f, 0.3f, 0.3f, 1.0f );
+        glClearColor( 0.0f, 0.0f, 0.0f, 1.0f );//clear/set the backgorund color
         glClear( GL_COLOR_BUFFER_BIT );
         
         // Draw the triangle
