@@ -1,0 +1,4 @@
+﻿  main.cpp
+c:\users\pedropva\desktop\openglroot\openglvs\openglvs\main.cpp(216): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+  OpenGLVS.vcxproj -> C:\Users\pedropva\Desktop\OpenGLRoot\OpenGLVS\Debug\OpenGLVS.exe
+  OpenGLVS.vcxproj -> C:\Users\pedropva\Desktop\OpenGLRoot\OpenGLVS\Debug\OpenGLVS.pdb (Partial PDB)
