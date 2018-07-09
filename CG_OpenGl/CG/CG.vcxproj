@@ -88,7 +88,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>$(SolutionDir)/../External Resources/GLEW/include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\pedropva\Desktop\Trabalho Final\CG_OpenGl\CG\glm;C:\Users\pedropva\Desktop\Trabalho Final\External Resources\GLFW\include;C:\Users\pedropva\Desktop\Trabalho Final\External Resources\GLEW\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <AdditionalLibraryDirectories>$(SolutionDir)/../External Resources/GLEW/lib/Release/x64</AdditionalLibraryDirectories>

@@ -67,6 +67,7 @@ int main(){
 
 	// Load the texture
 	GLuint Texture = loadTextureJPG("Textures/earth_daymap.jpg");
+	GLuint TextureSkybox = loadTextureJPG("Textures/stars.jpg");
 
 	// Get a handle for our "myTextureSampler" uniform
 	GLuint TextureID = glGetUniformLocation(programID, "myTextureSampler");
@@ -75,8 +76,18 @@ int main(){
 	vector<vec3> vertices;
 	vector<vec2> uvs;
 	vector<vec3> normals;
-	bool isObjLoaded = loadOBJ("Models/sphere.obj", vertices, uvs, normals);
+	vector<vec3> vertices1;
+	vector<vec2> uvs1;
+	vector<vec3> normals1;
+	vector<vec3> vertices2;
+	vector<vec2> uvs2;
+	vector<vec3> normals2;
+	bool isObjLoaded = loadOBJ("Models/sphere2.obj", vertices, uvs, normals);
 
+	bool isSkybox1Loaded = loadOBJ("Models/skybox.obj", vertices1, uvs1, normals1);
+	bool isSkybox2Loaded = loadOBJ("Models/skybox.obj", vertices2, uvs2, normals2);
+
+	//object
 	GLuint vertexbuffer;
 	glGenBuffers(1, &vertexbuffer);
 	glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
@@ -91,6 +102,38 @@ int main(){
 	glGenBuffers(1, &normalbuffer);
 	glBindBuffer(GL_ARRAY_BUFFER, normalbuffer);
 	glBufferData(GL_ARRAY_BUFFER, normals.size() * sizeof(vec3), &normals[0], GL_STATIC_DRAW);
+
+	//skybox 1
+	GLuint vertexbuffer1;
+	glGenBuffers(1, &vertexbuffer1);
+	glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer1);
+	glBufferData(GL_ARRAY_BUFFER, vertices1.size() * sizeof(vec3), &vertices1[0], GL_STATIC_DRAW);
+
+	GLuint uvbuffer1;
+	glGenBuffers(1, &uvbuffer1);
+	glBindBuffer(GL_ARRAY_BUFFER, uvbuffer1);
+	glBufferData(GL_ARRAY_BUFFER, uvs1.size() * sizeof(vec2), &uvs1[0], GL_STATIC_DRAW);
+
+	GLuint normalbuffer1;
+	glGenBuffers(1, &normalbuffer1);
+	glBindBuffer(GL_ARRAY_BUFFER, normalbuffer1);
+	glBufferData(GL_ARRAY_BUFFER, normals1.size() * sizeof(vec3), &normals1[0], GL_STATIC_DRAW);
+
+	//skybox 2
+	GLuint vertexbuffer2;
+	glGenBuffers(1, &vertexbuffer2);
+	glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer2);
+	glBufferData(GL_ARRAY_BUFFER, vertices2.size() * sizeof(vec3), &vertices2[0], GL_STATIC_DRAW);
+
+	GLuint uvbuffer2;
+	glGenBuffers(1, &uvbuffer2);
+	glBindBuffer(GL_ARRAY_BUFFER, uvbuffer2);
+	glBufferData(GL_ARRAY_BUFFER, uvs2.size() * sizeof(vec2), &uvs2[0], GL_STATIC_DRAW);
+
+	GLuint normalbuffer2;
+	glGenBuffers(1, &normalbuffer2);
+	glBindBuffer(GL_ARRAY_BUFFER, normalbuffer2);
+	glBufferData(GL_ARRAY_BUFFER, normals2.size() * sizeof(vec3), &normals2[0], GL_STATIC_DRAW);
 
 	glUseProgram(programID);
 	GLuint LightID = glGetUniformLocation(programID, "LightPosition_worldspace");
@@ -116,7 +159,7 @@ int main(){
 		glUniformMatrix4fv(ModelMatrixID, 1, GL_FALSE, &ModelMatrix[0][0]);
 		glUniformMatrix4fv(ViewMatrixID, 1, GL_FALSE, &ViewMatrix[0][0]);
 
-		vec3 lightPos = vec3(8, 5, 0);
+		vec3 lightPos = vec3(5, 5, 0);
 		glUniform3f(LightID, lightPos.x, lightPos.y, lightPos.z);
 
 		// Bind our texture in Texture Unit 0
@@ -142,6 +185,67 @@ int main(){
 
 		// Draw triangles
 		glDrawArrays(GL_TRIANGLES, 0, vertices.size());
+
+		glDisableVertexAttribArray(0);
+		glDisableVertexAttribArray(1);
+		glDisableVertexAttribArray(2);
+
+		// Bind our texture in Texture Unit 0
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, TextureSkybox);
+		// Set our "myTextureSampler" sampler to use Texture Unit 0
+		glUniform1i(TextureID, 0);
+
+		//NOW FOR SKYBOX 1
+		// Vertices
+		glEnableVertexAttribArray(0);
+		glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer1);
+		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
+
+		// UVs
+		glEnableVertexAttribArray(1);
+		glBindBuffer(GL_ARRAY_BUFFER, uvbuffer1);
+		glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, (void*)0);
+
+		// Normals
+		glEnableVertexAttribArray(2);
+		glBindBuffer(GL_ARRAY_BUFFER, normalbuffer1);
+		glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
+
+		// Draw triangles
+		glDrawArrays(GL_TRIANGLES, 0, vertices1.size());
+
+		glDisableVertexAttribArray(0);
+		glDisableVertexAttribArray(1);
+		glDisableVertexAttribArray(2);
+
+		//NOW FOR SKYBOX 2
+		ModelMatrix = glm::rotate(ModelMatrix, radians(180.0f), vec3(0,1,0));
+		MVP = ProjectionMatrix * ViewMatrix * ModelMatrix;
+		// Send our transformation to the currently bound shader, in the "MVP" uniform
+		glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &MVP[0][0]);
+		glUniformMatrix4fv(ModelMatrixID, 1, GL_FALSE, &ModelMatrix[0][0]);
+		glUniformMatrix4fv(ViewMatrixID, 1, GL_FALSE, &ViewMatrix[0][0]);
+
+
+		glRotated(90, 0, 0, 1); 
+		// Vertices
+		glEnableVertexAttribArray(0);
+		glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer2);
+		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
+
+		// UVs
+		glEnableVertexAttribArray(1);
+		glBindBuffer(GL_ARRAY_BUFFER, uvbuffer2);
+		glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, (void*)0);
+
+		// Normals
+		glEnableVertexAttribArray(2);
+		glBindBuffer(GL_ARRAY_BUFFER, normalbuffer2);
+		glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
+
+		// Draw triangles
+		glDrawArrays(GL_TRIANGLES, 0, vertices2.size());
 
 		glDisableVertexAttribArray(0);
 		glDisableVertexAttribArray(1);

@@ -10,15 +10,15 @@ extern GLuint WIDTH, HEIGHT;
 using namespace glm;
 
 // Initial position : on +Z
-glm::vec3 position = glm::vec3(0, 0, 10);
+glm::vec3 position = glm::vec3(0, 1, 10);
 //initial direction
-glm::vec3 direction = glm::vec3(0, 0, 0);
+glm::vec3 direction;
 //up vector
 glm::vec3 up = glm::vec3(0, 1, 0);
 //right vector
 glm::vec3 rightVector = glm::vec3(1, 0, 0);
 //object position which we will be orbiting around
-glm::vec3 objectPosition = glm::vec3(0, 0, 0);
+glm::vec3 objectPosition = glm::vec3(0, 1, 0);
 // Initial Field of View
 float initialFoV = 45.0f;
 
@@ -110,7 +110,7 @@ void computeMatricesFromInputs() {
 	float deltaTime = float(currentTime - lastTime);
 
 	// View direction vector
-	direction = normalize(position + objectPosition); //vec3(cos(verticalAngle) * sin(horizontalAngle), sin(verticalAngle), cos(verticalAngle) * cos(horizontalAngle));
+	direction = normalize(position - objectPosition); //vec3(cos(verticalAngle) * sin(horizontalAngle), sin(verticalAngle), cos(verticalAngle) * cos(horizontalAngle));
 	//cout << "direction: " << direction.x << " and " << direction.y << " and " << direction.z << endl;
 
 	// Rotate right
@@ -119,7 +119,7 @@ void computeMatricesFromInputs() {
 		rightVector = normalize(cross(up, direction));//vec3(-1, 0, 0);// vec3(sin(horizontalAngle - 3.14f / 2.0f), 0, cos(horizontalAngle - 3.14f / 2.0f));
 	}
 	// Up vector
-	up = normalize(cross(-rightVector, direction));
+	up = normalize(cross(direction, rightVector));
 	
 	keyboardEventsCameraMove(deltaTime);
 
